@@ -33,7 +33,9 @@ Run relion & cryosparc on LS6
    * Properly *End your session* when you are done or you allocation will continue to be charged until the Time Limit you initially set expires
      * N.B. the window `END SESSION HERE` allows you to end the job within the GUI window
      * You can also switch to the Analysis Portal Tab and click `End Job`
-   
+ * Easy way after first job
+   * At the bottom right of the TACC vis window are listed past jobs. You can click details to see details. Click `resubmit` to start a job again with previous settings
+  
 ### working within the GUI window
  * commands below are in the terminal window of the GUI
 
