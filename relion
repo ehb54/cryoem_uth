@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+use File::Basename;
+use Cwd;
+use Cwd 'abs_path';
+
+$cwd  = abs_path( getcwd() );
+$bdir = abs_path( dirname(__FILE__) );
+require "$bdir/utility.pm";
+config_init();
+
+$notes = "usage: $0 arguments
+
+initializes relion if needed
+runs relion with the provided arguments
+
+";
+
+## does sif file exist
+
+$relion_sif = "$$config{sif_directory}/relion_$$config{relion_version}.sif";
+
+if ( !-e $relion_sif ) {
+    my $cmd = "cd $$config{sif_directory} && singularity pull --disable-cache $$config{relion_docker}:$$config{relion_version}";
+    
+    print "Downloading $relion_sif from $$config{relion_docker}:$$config{relion_version}\n*** This step may take a few minutes ***\n";
+    singularity_run_cmd( $cmd );
+} else {
+    print "Found: $relion_sif\n";
+}
+
+## run relion with args
+
+singularity_run_cmd( "singularity exec --nv $relion_sif relion " . ( join ' ', @ARGV ) );
+

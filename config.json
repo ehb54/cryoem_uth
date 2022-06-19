@@ -1,0 +1,8 @@
+{
+    "debug"           : true
+
+    ,"relion_version" : "3.1.3"
+    ,"relion_docker"  : "docker://wjallen/relion"
+    ,"sif_directory"  : "$ENV{WORK}/sifs" 
+}
+
