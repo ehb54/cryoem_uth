@@ -35,8 +35,20 @@ Run relion & cryosparc on LS6
      * You can also switch to the Analysis Portal Tab and click `End Job`
    
 ### working within the GUI window
+ * commands below are in the terminal window of the GUI
 
 #### first time usage
- * in the terminal window of the GUI
-   * `git clone https://github.com/ehb54/cryoem_uth cryoem`
-   * 
+ * Install the helper tools in your home directory
+  * `cd ~ && git clone https://github.com/ehb54/cryoem_uth cryoem`
+
+#### running relion
+ * make a new or change to previously existing Relion project directory
+   * `relion_project_1` below is arbitrary, name it as you wish
+   * make new
+     * `mkdir $WORK/relion_project_1`
+   * change to existing
+     * `cd $WORK/relion_project_1` 
+ * run relion
+   * `~/cryoem/relion`
+     * the first time you run this, it will take a few minutes while it downloads and installs the needed info.
+
