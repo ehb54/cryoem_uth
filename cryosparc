@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use File::Basename;
+use Cwd;
+use Cwd 'abs_path';
+
+$cwd  = abs_path( getcwd() );
+$bdir = abs_path( dirname(__FILE__) );
+require "$bdir/utility.pm";
+config_init('cryosparc');
+
+$notes = "usage: $0 arguments
+
+initializes relion if needed
+runs relion with the provided arguments
+
+";
+
+## are license etc stored, if not, build up license info
+

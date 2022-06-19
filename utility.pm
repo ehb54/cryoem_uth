@@ -12,8 +12,11 @@ $| = 1;
 $configfile = "$bdir/config.json";
 
 sub config_init {
+    my $type = shift;
     error_exit("$0: config_init() : $configfile does not exist or is not readable" ) if !-e $configfile || !-r $configfile;
 
+    error_exit("$0: config_init($type) : internal error - type must be relion or cryosparc") if $type !~ /^(relion|cryosparc)$/;
+    
     ## check permissions
     {
         my $info = stat( $configfile );
@@ -30,36 +33,39 @@ sub config_init {
 
     $config = decode_json( join '', @configdata ) || die "$0: $configfile error decoding\n";
 
-    for my $req (
-        "relion_version"
-        ,"relion_docker"
-        ,"sif_directory"
-        ) {
-        error_exit( "$0: config_init() : $configfile missing required definitions for $req" ) if !exists $$config{$req};
-    }
-
-    if ( $$config{sif_directory} =~ /^~\// ) {
-        ## replace with HOME
-        $$config{sif_directory} =~ s/^~/$ENV{HOME}/;
-    }
-
-    ## evaluate ENV vars in sif_directory
-
-    $$config{sif_directory} =~ s/(\$ENV\{\w+\})/$1/eeg;
-
-    if ( !-d $$config{sif_directory} ) {
-        print "Making dirctory $$config{sif_directory}\n";
-        `mkdir $$config{sif_directory}`;
-        if ( !-d $$config{sif_directory} ) {
-            error_exit( "could not make directory $$config{sif_directory}" );
-        }
-    }
-
-    $$config{sif_directory} =~ abs_path($$config{sif_directory});
-
     if ( exists $$config{debug} ) {
         $debug = $$config{debug};
     }
+
+    if ( $type eq 'relion' ) {
+        for my $req (
+            "relion_version"
+            ,"relion_docker"
+            ,"sif_directory"
+            ) {
+            error_exit( "$0: config_init() : $configfile missing required definitions for $req" ) if !exists $$config{$req};
+        }
+
+        if ( $$config{sif_directory} =~ /^~\// ) {
+            ## replace with HOME
+            $$config{sif_directory} =~ s/^~/$ENV{HOME}/;
+        }
+
+        ## evaluate ENV vars in sif_directory
+
+        $$config{sif_directory} =~ s/(\$ENV\{\w+\})/$1/eeg;
+
+        if ( !-d $$config{sif_directory} ) {
+            print "Making dirctory $$config{sif_directory}\n";
+            `mkdir $$config{sif_directory}`;
+            if ( !-d $$config{sif_directory} ) {
+                error_exit( "could not make directory $$config{sif_directory}" );
+            }
+        }
+
+        $$config{sif_directory} =~ abs_path($$config{sif_directory});
+    }
+
 }
 
 $run_cmd_last_error;
