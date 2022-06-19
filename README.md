@@ -38,5 +38,5 @@ Run relion & cryosparc on LS6
 
 #### first time usage
  * in the terminal window of the GUI
-   * `git clone https://github.com/ehb54/eryoem_uth`
+   * `git clone https://github.com/ehb54/cryoem_uth cryoem`
    * 
