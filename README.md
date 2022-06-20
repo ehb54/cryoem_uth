@@ -54,7 +54,9 @@ Instructions and scripts to run relion & cryosparc on LS6
      * `cd $WORK/relion_project_1` 
  * run relion
    * `~/cryoem/relion`
-     * the first time you run this, it will take a few minutes while it downloads and installs the needed info.
+     * the first time usage:
+       * it will take a few minutes while it downloads and installs - depends on the load on LS6 file systems and network
+     * accepts standard relion command line arguments
 
 #### running cryosparc
  * `~/cryoem/cryosparc`
@@ -62,9 +64,12 @@ Instructions and scripts to run relion & cryosparc on LS6
      * make sure you have your cryosparc license available
      * you will need to enter various install information such as email, username, a new password, etc.
      * downloads & installs
+     * it can take about 30 minutes or more to install depending on the load on LS6 file systems and network
    * always:
      * starts the server
      * starts the web browser
+   * accepts standard cryosparcm command line arguments
+     * start|stop|restart|status
 
 ### known issues
  * [issues](https://github.com/ehb54/cryoem_uth/issues)
