@@ -7,6 +7,7 @@ Instructions and scripts to run relion & cryosparc on LS6
  * a valid account with available allocation on LS6
  * a valid cryosparc license id [get a cryosparc license](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/obtaining-a-license-id)
  * knowledge of transfering files to and from LS6
+ * background on working with relion & cryosparc 
 
 ## instructions
 
