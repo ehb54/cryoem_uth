@@ -1,11 +1,12 @@
-# cryoem_uth
+# Run relion & cryosparc on LS6
 
-Run relion & cryosparc on LS6
+Instructions and scripts to run relion & cryosparc on LS6
 
 ## prerequisities
 
  * a valid account with available allocation on LS6
  * a valid cryosparc license id [get a cryosparc license](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/obtaining-a-license-id)
+ * knowledge of transfering files to and from LS6
 
 ## instructions
 
@@ -17,7 +18,7 @@ Run relion & cryosparc on LS6
      * Application `DCV remote desktop`
      * Project - this is the allocation which will be charged for the usage
      * Queue - `gpu-a100`
-     * Nodes - the number of nodes
+     * Nodes - the number of nodes - currently only 1 node is supported
      * Job Name - optional, but useful if you are running multiple jobs
      * Time limit - Important - limits the maximum time of the session
      * Reservation - Ignore unless you have made special arrangements
