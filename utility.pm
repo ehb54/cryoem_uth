@@ -10,6 +10,42 @@ $| = 1;
 
 # configfile
 $configfile = "$bdir/config.json";
+# secrets
+$secretsfile = "$bdir/.secrets.json";
+
+sub secrets_init {
+    if ( !-e $secretsfile ) {
+        $secrets = decode_json( "{}" );
+        return;
+    }
+
+    error_exit("$0: secrets_init() : $secretsfile is not readable" ) if !-r $secretsfile;
+
+    ## check permissions
+    {
+        my $info = stat( $secretsfile );
+        if ( $info->mode & 0077 ) {
+            error_exit( "$0: permissions are too lenient on $secretsfile\nto fix:\nchmod 600 $secretsfile\n" );
+        }
+    }
+
+    my @secretsdata = `cat $secretsfile`;
+
+    error_exit( "$0: secrets_init(): $secretsfile empty" ) if @$secretsdata;
+
+    grep s/#.*$//, @secretsdata;
+
+    $secrets = decode_json( join '', @secretsdata ) || die "$0: $secretsfile error decoding\n";
+}
+
+sub secrets_write {
+    my $json = JSON->new;
+    my $fo = $secretsfile;
+    open OUT, ">$fo" || error_exit( "$0: log_write() error trying write secrets $fo $!" );
+    print OUT $json->pretty->encode( $secrets );
+    print OUT "\n";
+    close OUT;
+}    
 
 sub config_init {
     my $type = shift;
@@ -32,6 +68,8 @@ sub config_init {
     grep s/#.*$//, @configdata;
 
     $config = decode_json( join '', @configdata ) || die "$0: $configfile error decoding\n";
+
+    secrets_init();
 
     if ( exists $$config{debug} ) {
         $debug = $$config{debug};
@@ -66,6 +104,54 @@ sub config_init {
         $$config{sif_directory} =~ abs_path($$config{sif_directory});
     }
 
+    if ( $type eq 'cryosparc' ) {
+        for my $req (
+            "cryosparc_directory"
+            ,"cryosparc_downloads"
+            ,"cryosparc_cuda_path"
+            ,"cryosparc_port"
+            ) {
+            error_exit( "$0: config_init() : $configfile missing required definitions for $req" ) if !exists $$config{$req};
+        }
+
+        if ( $$config{cryosparc_directory} =~ /^~\// ) {
+            ## replace with HOME
+            $$config{cryosparc_directory} =~ s/^~/$ENV{HOME}/;
+        }
+
+        ## evaluate ENV vars in cryosparc_directory
+
+        $$config{cryosparc_directory} =~ s/(\$ENV\{\w+\})/$1/eeg;
+
+        if ( !-d $$config{cryosparc_directory} ) {
+            print "Making dirctory $$config{cryosparc_directory}\n";
+            `mkdir $$config{cryosparc_directory}`;
+            if ( !-d $$config{cryosparc_directory} ) {
+                error_exit( "could not make directory $$config{cryosparc_directory}" );
+            }
+        }
+
+        $$config{cryosparc_directory} =~ abs_path($$config{cryosparc_directory});
+
+        if ( $$config{cryosparc_downloads} =~ /^~\// ) {
+            ## replace with HOME
+            $$config{cryosparc_downloads} =~ s/^~/$ENV{HOME}/;
+        }
+
+        ## evaluate ENV vars in cryosparc_downloads
+
+        $$config{cryosparc_downloads} =~ s/(\$ENV\{\w+\})/$1/eeg;
+
+        if ( !-d $$config{cryosparc_downloads} ) {
+            print "Making dirctory $$config{cryosparc_downloads}\n";
+            `mkdir $$config{cryosparc_downloads}`;
+            if ( !-d $$config{cryosparc_downloads} ) {
+                error_exit( "could not make downloads $$config{cryosparc_downloads}" );
+            }
+        }
+
+        $$config{cryosparc_downloads} =~ abs_path($$config{cryosparc_downloads});
+    }
 }
 
 $run_cmd_last_error;
@@ -84,9 +170,14 @@ sub run_cmd {
     my $cmd       = shift || die "run_cmd() requires an argument\n";
     my $no_die    = shift;
     my $repeattry = shift;
+    my $echo      = shift;
     print "run_cmd(): command : $cmd\n" if $debug;
     $run_cmd_last_error = 0;
-    $run_cmd_last_result = `$cmd`;
+    if ( $echo ) {
+        print `$cmd`;
+    } else {
+        $run_cmd_last_result = `$cmd`;
+    }
     chomp $run_cmd_last_result;
     print "run_cmd(): result : $run_cmd_last_result\n" if $debug;
     if ( $? ) {
@@ -126,6 +217,43 @@ sub debug_json {
         . "\n"
         . line()
         ;
+}
+
+sub getinput {
+    my $msg        = shift;
+    my $allowempty = shift;
+    # my $pwtype     = shift;
+
+    my $input;
+    do {
+        print "$msg ";
+        $input = <STDIN>;
+        chomp $input;
+    } while ( $allowempty || !length($input) );
+
+    return $input;
+}
+
+sub getareyousure {
+    my $msg    = shift;
+    print "$msg\n";
+    my $res;
+    do {
+        $res = getinput( "Are you sure? (yes or no)" );
+        print "res is '$res'\n";
+    } while ( lc($res) !~ /^(yes|no)$/ );
+    return lc($res) eq 'yes';
+}
+
+sub line {
+    my $char = shift;
+    $char = '-' if !$char;
+    ${char}x80 . "\n";
+}
+
+sub message_header {
+    my $msg = shift;
+    line() . "$msg\n" . line();
 }
 
 return true;
