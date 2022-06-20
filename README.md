@@ -54,3 +54,20 @@ Run relion & cryosparc on LS6
    * `~/cryoem/relion`
      * the first time you run this, it will take a few minutes while it downloads and installs the needed info.
 
+#### running cryosparc
+ * `~/cryoem/cryosparc`
+   * first time usage:
+     * make sure you have your cryosparc license available
+     * you will need to enter various install information such as email, username, a new password, etc.
+     * downloads & installs
+   * always:
+     * starts the server
+     * starts the web browser
+
+### known issues
+ * [issues](https://github.com/ehb54/cryoem_uth/issues)
+   * report one here if you find one!
+
+### default paths, ports
+ * [configuration](https://github.com/ehb54/cryoem_uth/blob/main/config.json)
+   * update the contents of this file if needed
