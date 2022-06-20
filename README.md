@@ -73,7 +73,7 @@ Instructions and scripts to run relion & cryosparc on LS6
 
 ### known issues
  * [issues](https://github.com/ehb54/cryoem_uth/issues)
-   * report one here if you find one!
+   * please report issues encountered here
 
 ### default paths, ports
  * [configuration](https://github.com/ehb54/cryoem_uth/blob/main/config.json)
