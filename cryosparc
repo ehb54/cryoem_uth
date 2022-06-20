@@ -113,13 +113,13 @@ yes 1 | ./install.sh --standalone \\
              --initial_lastname "$$secrets{cryosparc_install_lastname}" \\
              --port $$config{cryosparc_port} && \\
 $$config{cryosparc_directory}/cryosparc_master/bin/cryosparcm stop && \\
-echo "export CRYOSPARC_MASTER_HOSTNAME=\$\(hostname -f\) >> $$config{cryosparc_directory}/cryosparc_master/config.sh
+echo "export CRYOSPARC_MASTER_HOSTNAME=\\\$\(hostname -f\)" >> $$config{cryosparc_directory}/cryosparc_master/config.sh
 );
     run_cmd( $cmd, 0, 0, 1 );
 }
 
 sub extract {
-    print message_header( "Extract cryosparc\n*** This step may take many minutes ***" );
+    print message_header( "Extract cryosparc\n*** This step usually takes 10 or more minutes ***" );
     run_cmd( "cd $$config{cryosparc_directory} && tar -xzf $$config{cryosparc_downloads}/cryosparc_master.tar.gz" );
     print "first extraction complete\nstarting second extraction\n";
     run_cmd( "cd $$config{cryosparc_directory} && tar -xzf $$config{cryosparc_downloads}/cryosparc_worker.tar.gz" );
@@ -141,4 +141,8 @@ if ( !$extract
         install();
 }
 
+push @ARGV, "start" if !@ARGV;
+print message_header( "running cryosparcm " . join( ' ', @ARGV ) );
 run_cmd( "$$config{cryosparc_directory}/cryosparc_master/bin/cryosparcm " . join( ' ', @ARGV ), 0, 0, 1 );
+print line();
+print "To access the cryosparc, run \$ firefox localhost:$$config{cryosparc_port}\n";
