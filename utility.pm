@@ -151,6 +151,22 @@ sub config_init {
         }
 
         $$config{cryosparc_downloads} =~ abs_path($$config{cryosparc_downloads});
+
+        if ( $$config{firefox_directory} ) {
+            ## evaluate ENV vars in sif_directory
+
+            $$config{firefox_directory} =~ s/(\$ENV\{\w+\})/$1/eeg;
+
+            if ( !-d $$config{firefox_directory} ) {
+                print "Making dirctory $$config{firefox_directory}\n";
+                `mkdir $$config{firefox_directory}`;
+                if ( !-d $$config{firefox_directory} ) {
+                    error_exit( "could not make directory $$config{firefox_directory}" );
+                }
+            }
+
+            $$config{firefox_directory} =~ abs_path($$config{firefox_directory});
+        }
     }
 }
 

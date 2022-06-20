@@ -3,6 +3,7 @@
 use File::Basename;
 use Cwd;
 use Cwd 'abs_path';
+use IO::Socket::IP;
 
 $cwd  = abs_path( getcwd() );
 $bdir = abs_path( dirname(__FILE__) );
@@ -141,8 +142,32 @@ if ( !$extract
         install();
 }
 
+## install firefox
+if ( $$config{firefox_url} && $$config{firefox_directory}
+     && !-e "$$config{firefox_directory}/firefox" ) {
+    print message_header( "installing firefox" );
+    
+    my $tarball = $$config{firefox_url};
+    $tarball =~ s/^.*\///;
+    run_cmd( "cd $$config{firefox_directory} && curl -L $$config{firefox_url} -o $tarball && tar jxf $tarball --strip-components 1" );
+}
+
 push @ARGV, "start" if !@ARGV;
 print message_header( "running cryosparcm " . join( ' ', @ARGV ) );
 run_cmd( "$$config{cryosparc_directory}/cryosparc_master/bin/cryosparcm " . join( ' ', @ARGV ), 0, 0, 1 );
 print line();
-print "To access the cryosparc, run \$ firefox localhost:$$config{cryosparc_port}\n";
+
+if ( $ARGV[0] =~ /start/ ) {
+    if ( -e "$$config{firefox_directory}/firefox" ) {
+        print "Waiting for cryosparc server to become ready\n";
+        my $socket = IO::Socket::IP->new(PeerAddr => 'localhost', PeerPort => $$config{cryosparc_port}, Timeout => 120 );
+        if ($socket) {
+            $socket->close;
+        }
+        sleep 1; ## cryosparc delay from port open to service working
+        print "Starting firefox\n";
+        run_cmd( "setsid $$config{firefox_directory}/firefox localhost:$$config{cryosparc_port} > /dev/null 2>&1 < /dev/null &" );
+    } else {
+        print "To access cryosparc, point your web browser running on DCV to localhost:$$config{cryosparc_port}\n";
+    }
+}

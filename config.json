@@ -8,5 +8,7 @@
     ,"cryosparc_downloads" : "$ENV{SCRATCH}/cryosparc_cache/downloads"
     ,"cryosparc_cuda_path" : "/opt/apps/cuda/11.4"
     ,"cryosparc_port"      : 61000
+    ,"firefox_url"         : "https://ftp.mozilla.org/pub/firefox/releases/100.0.2/linux-x86_64/en-US/firefox-100.0.2.tar.bz2"
+    ,"firefox_directory"   : "$ENV{WORK}/firefox"
 }
 
