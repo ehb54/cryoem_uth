@@ -62,7 +62,8 @@ Instructions and scripts to run relion & cryosparc on LS6
  * `~/cryoem/cryosparc`
    * first time usage:
      * make sure you have your cryosparc license available
-     * you will need to enter various install information such as email, username, a new password, etc.
+     * you will need to enter various install information such as email, username, a new password, etc. 
+       * the username, password are unrelated to any existing username and passwords. Set as you wish. They are used to log into cryosparc
      * downloads & installs
      * it can take about 30 minutes or more to install depending on the load on LS6 file systems and network
    * always:
