@@ -29,6 +29,7 @@ Instructions and scripts to run relion & cryosparc on LS6
    * If all is well, you should be presented with a new `TAP Job Status` screen
    * e.g. ![image](https://user-images.githubusercontent.com/11505970/174487338-98713cfa-de26-4a61-a583-429c041b28c3.png)
    * Click `Connect`
+     * At times, LS6 might be quite busy and it may take awhile for `Connect` to appear. Appropriate messages are displayed when this happens. 
    * A new screen will appear where you will need to enter your credentials (not shown)
    * Finally you will be presented (typically in a new tab) a window with the GUI desktop running on the allocated compute node
    * e.g. ![image](https://user-images.githubusercontent.com/11505970/174487501-b047b4af-979b-48d5-b921-89e0bd8c6116.png)
