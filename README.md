@@ -67,8 +67,8 @@ Instructions and scripts to run relion & cryosparc on LS6
        * the username, password are unrelated to any existing username and passwords. Set as you wish. They are used to log into cryosparc
      * downloads & installs
      * it can take about 30 minutes or more to install depending on the load on LS6 file systems and network
-   * always:
-     * starts the server
+   * when provided no command arguments or start or restart:
+     * starts the server 
      * starts the web browser
    * accepts standard cryosparcm command line arguments
      * start|stop|restart|status
